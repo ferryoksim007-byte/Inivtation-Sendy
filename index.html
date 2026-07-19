@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>RSVP — SENN Sweet Seventeen</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/animations.css">
+<link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <canvas id="wave-canvas" class="bg-canvas-layer"></canvas>
+  <div id="bubble-layer" class="bg-canvas-layer"></div>
+  <div id="sparkle-layer" class="bg-canvas-layer"></div>
+
+  <div class="nav-back" data-target="dresscode.html" aria-label="Go back">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+
+  <div class="flow-progress">
+    <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot active"></span><span class="dot"></span>
+  </div>
+
+  <main class="stage">
+    <div class="content-layer">
+      <div class="glass-card">
+        <div class="text-center">
+          <span class="eyebrow">RSVP</span>
+          <h2 class="page-title" style="font-size:clamp(2rem,5vw,2.8rem); margin-top:0.5rem;">Can u come to my<br>17th birthday??</h2>
+        </div>
+
+        <form id="rsvp-form" class="rsvp-form">
+          <div class="form-group">
+            <label for="rsvp-name">Full Name</label>
+            <input type="text" id="rsvp-name" name="name" placeholder="Your full name" autocomplete="name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="rsvp-phone">Phone Number</label>
+            <input type="tel" id="rsvp-phone" name="phone" placeholder="e.g. 0812xxxxxxx" autocomplete="tel" required>
+          </div>
+
+          <div class="form-group">
+            <label>Can u come to my 17th birthday??</label>
+            <div class="rsvp-options">
+              <div class="rsvp-option" data-value="coming">OFCC &gt;&lt;</div>
+              <div class="rsvp-option" data-value="not_coming">NUHH :(</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="rsvp-message">Message</label>
+            <textarea id="rsvp-message" name="message" placeholder="Leave a sweet message for Senn..."></textarea>
+          </div>
+
+          <p id="rsvp-error" class="form-error"></p>
+
+          <button type="submit" id="rsvp-submit" class="btn btn-primary">SEND 💌</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- RSVP success popup -->
+  <div class="popup-overlay" id="rsvp-popup">
+    <div class="glass-card popup-card">
+      <div class="popup-icon">🎉</div>
+      <h3>Thank you!!</h3>
+      <p class="subtitle">Can't wait to celebrate with you!</p>
+      <button id="popup-continue" class="btn btn-primary mt-2">Continue</button>
+    </div>
+  </div>
+
+  <audio id="bg-audio" loop preload="none">
+    <source src="assets/audio/ambient-ocean-piano.mp3" type="audio/mpeg">
+  </audio>
+  <button id="music-toggle" class="music-toggle" aria-label="Toggle background music">
+    <div class="music-bars"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+  </button>
+
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/effects.js"></script>
+  
+  <!-- FIX 1: SennGuard di-comment dulu biar ga infinite refresh -->
+  <!-- <script>window.SennGuard.requireInvite('index.html');</script> -->
+  
+  <!-- FIX 2: js/rsvp.js dihapus biar ga bentrok sama script di bawah -->
+
+  <script>
+    // 1. Logika untuk mendeteksi pilihan kehadiran (Yes / No)
+    const rsvpOptions = document.querySelectorAll('.rsvp-option');
+    let selectedAttendance = "💖 OFCC ><"; // Default
+
+    if (rsvpOptions.length > 0) {
+      rsvpOptions[0].classList.add('active');
+    }
+
+    rsvpOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        rsvpOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+        
+        const attendanceValue = option.getAttribute('data-value');
+        if (attendanceValue === 'coming') {
+          selectedAttendance = "💖 OFCC ><";
+        } else {
+          selectedAttendance = "😢 NUHH :(";
+        }
+      });
+    });
+
+    // 2. Logika Kirim Data
+    const rsvpForm = document.getElementById('rsvp-form');
+    const rsvpSubmitBtn = document.getElementById('rsvp-submit');
+    const rsvpPopup = document.getElementById('rsvp-popup');
+    const closePopupBtn = document.getElementById('popup-continue');
+
+    if (rsvpForm) {
+      rsvpForm.addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah web ke-refresh pas diklik
+
+        if (rsvpSubmitBtn) {
+          rsvpSubmitBtn.innerText = "SENDING... ✨";
+          rsvpSubmitBtn.disabled = true;
+        }
+
+        const guestName = document.getElementById('rsvp-name').value;
+        const guestPhone = document.getElementById('rsvp-phone').value;
+        const guestMessage = document.getElementById('rsvp-message').value || "-";
+
+        // Ganti dengan URL Google Apps Script lo
+        const googleSheetsEndpoint = "https://script.google.com/macros/s/AKfycbxncsqZkra1hCN3w3Rp2h5DqnAdx0846NCDNPRz0n7OP-V-BDfNLT8OPfytEUY6I84G/exec"; 
+
+        const payloadData = {
+          name: guestName,
+          phone: guestPhone,
+          attendance: selectedAttendance,
+          message: guestMessage
+        };
+
+        fetch(googleSheetsEndpoint, {
+          method: 'POST',
+          mode: 'no-cors', 
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payloadData)
+        })
+        .then(() => {
+          if (rsvpSubmitBtn) {
+            rsvpSubmitBtn.innerText = "SEND 💌";
+            rsvpSubmitBtn.disabled = false;
+          }
+
+          rsvpForm.reset();
+          
+          rsvpOptions.forEach(opt => opt.classList.remove('active'));
+          if (rsvpOptions.length > 0) {
+            rsvpOptions[0].classList.add('active');
+          }
+          selectedAttendance = "💖 OFCC ><";
+
+          if (rsvpPopup) {
+            rsvpPopup.classList.add('active');
+            rsvpPopup.style.display = 'flex'; 
+          }
+
+          if (typeof confetti === 'function') {
+            confetti({ particleCount: 150, spread: 80, origin: { y: 0.5 } });
+          }
+        })
+        .catch(err => {
+          console.error("Error:", err);
+          alert("Jaringan bermasalah bro, coba lagi ya!");
+          if (rsvpSubmitBtn) {
+            rsvpSubmitBtn.innerText = "SEND 💌";
+            rsvpSubmitBtn.disabled = false;
+          }
+        });
+      });
+    }
+
+    if (closePopupBtn) {
+      closePopupBtn.addEventListener('click', () => {
+        if (rsvpPopup) {
+          rsvpPopup.classList.remove('active');
+          rsvpPopup.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
