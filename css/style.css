@@ -594,7 +594,7 @@ h1, h2, h3, .display {
 .dress-card p { color: var(--ink-soft); font-size: 0.9rem; }
 
 /* ==========================================================================
-   PAGE 4 — RSVP FORM
+   PAGE 4 — RSVP FORM (UPDATED WITH MENU)
    ========================================================================== */
 
 .rsvp-form { display: flex; flex-direction: column; gap: 1.25rem; margin-top: 1.75rem; }
@@ -632,9 +632,12 @@ h1, h2, h3, .display {
 
 .form-group textarea { resize: vertical; min-height: 90px; }
 
-.rsvp-options { display: flex; gap: 1rem; flex-wrap: wrap; }
+/* --- GRID OPTIONS UNTUK RSVP & MENU --- */
+.rsvp-options, .menu-grid, .menu-options { 
+  display: flex; gap: 1rem; flex-wrap: wrap; 
+}
 
-.rsvp-option {
+.rsvp-option, .menu-option {
   flex: 1;
   min-width: 140px;
   padding: 1rem;
@@ -647,14 +650,19 @@ h1, h2, h3, .display {
   transition: all var(--dur-fast) var(--ease-luxury);
 }
 
-.rsvp-option:hover { transform: translateY(-3px); }
+.rsvp-option:hover, .menu-option:hover { 
+  transform: translateY(-3px); 
+}
 
-.rsvp-option.selected {
+/* --- STATE SELECTED/ACTIVE UNTUK KEDUANYA --- */
+.rsvp-option.selected, .rsvp-option.active,
+.menu-option.selected, .menu-option.active {
   background: linear-gradient(135deg, var(--gold), var(--gold-deep));
   color: var(--ivory);
   border-color: var(--gold-deep);
   box-shadow: var(--shadow-soft);
 }
+/* ------------------------------------------- */
 
 .form-error {
   font-size: 0.8rem;
