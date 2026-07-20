@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="css/animations.css">
 <link rel="stylesheet" href="css/responsive.css">
 <style>
-  /* Animasi Smooth untuk menu makanan */
+  /* Animasi Smooth untuk menu makanan (Tetap sama) */
   #menu-section {
     max-height: 0;
     opacity: 0;
@@ -17,15 +17,13 @@
     transition: all 0.5s ease-in-out;
   }
 
-  /* Ini class trigger saat OFC diklik */
   #menu-section.show {
     max-height: 300px; 
     opacity: 1;
     margin-top: 1rem;
-    overflow: visible; /* Biar shadow tombolnya ga kepotong pas muncul */
+    overflow: visible;
   }
 
-  /* Styling grid pilihan menu (Sesuai yang lo minta) */
   .menu-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -33,11 +31,15 @@
     margin-top: 0.5rem;
   }
   
+  /* --- INI YANG DIUBAH BRO --- */
+  
+  /* Default: Cuma Outline (Garis Luar), Background Transparan */
   .menu-option {
     padding: 0.8rem 0.5rem;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.5); /* Outline lebih tegas */
+    background: transparent; /* Tengahnya bolong/transparan */
+    color: rgba(255, 255, 255, 0.8);
     text-align: center;
     cursor: pointer;
     font-size: 0.9rem;
@@ -45,11 +47,13 @@
     user-select: none;
   }
   
+  /* Active: Fill (Terisi Penuh) saat diklik */
   .menu-option.active {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: #fff;
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
-    font-weight: 600;
+    background: #fff; /* Background terisi putih solid */
+    color: #333; /* Teks berubah gelap biar kontras & kebaca */
+    border-color: #fff; /* Outline ikut jadi putih solid */
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4); /* Efek glowing */
+    font-weight: 700;
     transform: translateY(-2px);
   }
 </style>
