@@ -140,27 +140,42 @@
   <script src="js/effects.js"></script>
   <script src="js/rsvp.js"></script>
   <script>
-    // 1. Logika Kehadiran (Yes / No)
+   // 1. Logika Kehadiran (Yes / No)
     const rsvpOptions = document.querySelectorAll('.rsvp-option');
-    let selectedAttendance = "💖 OFCC ><";
+    const menuSection = document.getElementById('menu-section');
+    let selectedAttendance = ""; // Dikosongin di awal biar user milih dulu
 
-    if (rsvpOptions.length > 0) {
-      rsvpOptions[0].classList.add('active');
-    }
+    // (HAPUS kode if (rsvpOptions.length > 0) { ... } yang bikin aktif otomatis)
 
     rsvpOptions.forEach(option => {
       option.addEventListener('click', () => {
+        // Hilangin efek active dari semua tombol
         rsvpOptions.forEach(opt => opt.classList.remove('active'));
+        // Kasih efek active ke tombol yang diklik
         option.classList.add('active');
         
         const attendanceValue = option.getAttribute('data-value');
         if (attendanceValue === 'coming') {
           selectedAttendance = "💖 OFCC ><";
-          document.getElementById('menu-section').style.display = 'block'; // Tampilkan menu kalau hadir
+          // Panggil animasi smooth munculin menu
+          menuSection.classList.add('show'); 
         } else {
           selectedAttendance = "😢 NUHH :(";
-          document.getElementById('menu-section').style.display = 'none'; // Sembunyikan menu kalau ga hadir
+          // Panggil animasi smooth nyembunyiin menu
+          menuSection.classList.remove('show'); 
         }
+      });
+    });
+
+    // 2. Logika Pilihan Menu Makanan
+    const menuOptions = document.querySelectorAll('.menu-option');
+    let selectedMenu = "Beef Teriyaki 🥩"; // Menu default saat muncul
+
+    menuOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        menuOptions.forEach(opt => opt.classList.remove('active'));
+        option.classList.add('active');
+        selectedMenu = option.getAttribute('data-value');
       });
     });
 
@@ -208,14 +223,14 @@
         const googleSheetsEndpoint = "https://script.google.com/macros/s/AKfycbxncsqZkra1hCN3w3Rp2h5DqnAdx0846NCDNPRz0n7OP-V-BDfNLT8OPfytEUY6I84G/exec"; 
 
         // PAYLOAD TERBARU (Ditambah data menu)
-        const payloadData = {
+          const payloadData = {
           name: guestName,
           phone: guestPhone,
           attendance: selectedAttendance,
-          menu: selectedAttendance.includes('NUHH') ? "-" : selectedMenu, // Kalau ga dateng, menu otomatis '-'
+          // Kalau ga dateng atau belum milih, menu otomatis "-"
+          menu: (!selectedAttendance || selectedAttendance.includes('NUHH')) ? "-" : selectedMenu, 
           message: guestMessage
         };
-
         fetch(googleSheetsEndpoint, {
           method: 'POST',
           mode: 'no-cors',
