@@ -8,8 +8,8 @@
 <link rel="stylesheet" href="css/animations.css">
 <link rel="stylesheet" href="css/responsive.css">
 <style>
-  /* Animasi Smooth untuk menu makanan (Tetap sama) */
-  #menu-section {
+/* Animasi Smooth untuk menu makanan (Tetap dipakai biar munculnya mulus) */
+menu-section {
     max-height: 0;
     opacity: 0;
     overflow: hidden;
@@ -24,37 +24,42 @@
     overflow: visible;
   }
 
+  /* --- STYLING MENU (Persis seperti rsvp-options) --- */
+  
+  /* Wrapper Grid/Flex nya */
   .menu-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 0.8rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
     margin-top: 0.5rem;
   }
   
-  /* --- INI YANG DIUBAH BRO --- */
-  
-  /* Default: Cuma Outline (Garis Luar), Background Transparan */
+  /* Default: Outline mewah */
   .menu-option {
-    padding: 0.8rem 0.5rem;
-    border-radius: 12px;
-    border: 1.5px solid rgba(255, 255, 255, 0.5); /* Outline lebih tegas */
-    background: transparent; /* Tengahnya bolong/transparan */
-    color: rgba(255, 255, 255, 0.8);
+    flex: 1;
+    min-width: 140px;
+    padding: 1rem;
     text-align: center;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid rgba(176, 141, 95, 0.3);
+    background: rgba(255, 255, 255, 0.4);
     cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    transition: all var(--dur-fast) var(--ease-luxury);
     user-select: none;
   }
+
+  /* Efek melayang saat hover */
+  .menu-option:hover { 
+    transform: translateY(-3px); 
+  }
   
-  /* Active: Fill (Terisi Penuh) saat diklik */
+  /* Active: Fill Gold saat diklik (Sama dengan .rsvp-option.selected) */
   .menu-option.active {
-    background: #fff; /* Background terisi putih solid */
-    color: #333; /* Teks berubah gelap biar kontras & kebaca */
-    border-color: #fff; /* Outline ikut jadi putih solid */
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4); /* Efek glowing */
-    font-weight: 700;
-    transform: translateY(-2px);
+    background: linear-gradient(135deg, var(--gold), var(--gold-deep));
+    color: var(--ivory);
+    border-color: var(--gold-deep);
+    box-shadow: var(--shadow-soft);
   }
 </style>
 </head>
