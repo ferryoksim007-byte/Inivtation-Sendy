@@ -104,15 +104,15 @@ menu-section {
             </div>
           </div>
 
-          <!-- FITUR BARU: PILIHAN MENU MAKANAN -->
-          <div class="form-group" id="menu-section">
-            <label>Choose Your Meal 🍱</label>
-            <div class="menu-grid">
-              <div class="menu-option active" data-value="Beef Teriyaki Set">Beef Teriyaki 🥩</div>
-              <div class="menu-option" data-value="Chicken Katsu Set">Chicken Katsu 🍗</div>
-              <div class="menu-option" data-value="Vegetarian Pasta">Veggie Pasta 🍝</div>
-            </div>
+        <!-- FITUR MENU -->
+        <div class="form-group" id="menu-section" style="display: none;">
+          <label>Choose Your Meal 🍱</label>
+          <div class="rsvp-options">
+            <div class="rsvp-option menu-item" data-value="Beef Teriyaki Set">Beef Teriyaki 🥩</div>
+            <div class="rsvp-option menu-item" data-value="Chicken Katsu Set">Chicken Katsu 🍗</div>
+            <div class="rsvp-option menu-item" data-value="Vegetarian Pasta">Veggie Pasta 🍝</div>
           </div>
+        </div>
 
           <div class="form-group">
             <label for="rsvp-message">Message</label>
@@ -150,45 +150,42 @@ menu-section {
   <script src="js/effects.js"></script>
   <script src="js/rsvp.js"></script>
   <script>
-// 1. Logika Kehadiran (Yes / No)
-    const rsvpOptions = document.querySelectorAll('.rsvp-option');
+    // 1. Logika Kehadiran (OFCC / NUHH)
+    const rsvpOptions = document.querySelectorAll('.rsvp-options .rsvp-option:not(.menu-item)');
     const menuSection = document.getElementById('menu-section');
-    let selectedAttendance = ""; // Kosong di awal
-
-    // Pastikan saat pertama load, menu bersih dari inline style
-    if (menuSection) {
-        menuSection.style.display = 'block'; // Biarkan CSS max-height yang nyembunyiin
-    }
-
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    let selectedAttendance = "";
+    let selectedMenu = "";
+    
     rsvpOptions.forEach(option => {
       option.addEventListener('click', () => {
-        // Hilangin efek active dari kedua tombol
-        rsvpOptions.forEach(opt => opt.classList.remove('active'));
-        
-        // Kasih efek active ke tombol yang diklik
-        option.classList.add('active');
+        // Sesuai CSS lo: hapus & tambah class 'selected' pada tombol kehadiran
+        rsvpOptions.forEach(opt => opt.classList.remove('selected'));
+        option.classList.add('selected');
         
         const attendanceValue = option.getAttribute('data-value');
         
         if (attendanceValue === 'coming') {
           selectedAttendance = "💖 OFCC ><";
-          menuSection.classList.add('show'); // Animasi muncul
+          menuSection.style.display = 'block'; // Tampilkan menu
         } else {
           selectedAttendance = "😢 NUHH :(";
-          menuSection.classList.remove('show'); // Animasi ngilang
+          menuSection.style.display = 'none';  // Sembunyikan menu
+          
+          // Reset pilihan menu kalau pilih NUHH
+          menuItems.forEach(m => m.classList.remove('selected'));
+          selectedMenu = "";
         }
       });
     });
-
+    
     // 2. Logika Pilihan Menu Makanan
-    const menuOptions = document.querySelectorAll('.menu-option');
-    let selectedMenu = "Beef Teriyaki Set"; // Sesuai data-value
-
-    menuOptions.forEach(option => {
-      option.addEventListener('click', () => {
-        menuOptions.forEach(opt => opt.classList.remove('active'));
-        option.classList.add('active');
-        selectedMenu = option.getAttribute('data-value');
+    menuItems.forEach(item => {
+      item.addEventListener('click', () => {
+        menuItems.forEach(m => m.classList.remove('selected'));
+        item.classList.add('selected');
+        selectedMenu = item.getAttribute('data-value');
       });
     });
 
