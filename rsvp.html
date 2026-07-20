@@ -8,23 +8,24 @@
 <link rel="stylesheet" href="css/animations.css">
 <link rel="stylesheet" href="css/responsive.css">
 <style>
-  /* Animasi Smooth untuk memunculkan/menyembunyikan menu makanan */
+  /* Animasi Smooth untuk menu makanan */
   #menu-section {
     max-height: 0;
     opacity: 0;
     overflow: hidden;
     margin-top: 0;
-    transition: all 0.5s ease-in-out; /* Ini yang bikin animasinya smooth bro */
+    transition: all 0.5s ease-in-out;
   }
 
-  /* Class ini bakal ditambahin via JS pas OFC diklik */
+  /* Ini class trigger saat OFC diklik */
   #menu-section.show {
     max-height: 300px; 
     opacity: 1;
-    margin-top: 1rem; /* Kasih jarak pas dia muncul */
+    margin-top: 1rem;
+    overflow: visible; /* Biar shadow tombolnya ga kepotong pas muncul */
   }
 
-  /* Styling grid pilihan menu dari lo (Sama persis) */
+  /* Styling grid pilihan menu (Sesuai yang lo minta) */
   .menu-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -140,48 +141,39 @@
   <script src="js/effects.js"></script>
   <script src="js/rsvp.js"></script>
   <script>
-   // 1. Logika Kehadiran (Yes / No)
+// 1. Logika Kehadiran (Yes / No)
     const rsvpOptions = document.querySelectorAll('.rsvp-option');
     const menuSection = document.getElementById('menu-section');
-    let selectedAttendance = ""; // Dikosongin di awal biar user milih dulu
+    let selectedAttendance = ""; // Kosong di awal
 
-    // (HAPUS kode if (rsvpOptions.length > 0) { ... } yang bikin aktif otomatis)
+    // Pastikan saat pertama load, menu bersih dari inline style
+    if (menuSection) {
+        menuSection.style.display = 'block'; // Biarkan CSS max-height yang nyembunyiin
+    }
 
     rsvpOptions.forEach(option => {
       option.addEventListener('click', () => {
-        // Hilangin efek active dari semua tombol
+        // Hilangin efek active dari kedua tombol
         rsvpOptions.forEach(opt => opt.classList.remove('active'));
+        
         // Kasih efek active ke tombol yang diklik
         option.classList.add('active');
         
         const attendanceValue = option.getAttribute('data-value');
+        
         if (attendanceValue === 'coming') {
           selectedAttendance = "💖 OFCC ><";
-          // Panggil animasi smooth munculin menu
-          menuSection.classList.add('show'); 
+          menuSection.classList.add('show'); // Animasi muncul
         } else {
           selectedAttendance = "😢 NUHH :(";
-          // Panggil animasi smooth nyembunyiin menu
-          menuSection.classList.remove('show'); 
+          menuSection.classList.remove('show'); // Animasi ngilang
         }
       });
     });
 
     // 2. Logika Pilihan Menu Makanan
     const menuOptions = document.querySelectorAll('.menu-option');
-    let selectedMenu = "Beef Teriyaki 🥩"; // Menu default saat muncul
-
-    menuOptions.forEach(option => {
-      option.addEventListener('click', () => {
-        menuOptions.forEach(opt => opt.classList.remove('active'));
-        option.classList.add('active');
-        selectedMenu = option.getAttribute('data-value');
-      });
-    });
-
-    // 2. Logika Pilihan Menu Makanan
-    const menuOptions = document.querySelectorAll('.menu-option');
-    let selectedMenu = "Beef Teriyaki 🥩"; // Default menu awal
+    let selectedMenu = "Beef Teriyaki Set"; // Sesuai data-value
 
     menuOptions.forEach(option => {
       option.addEventListener('click', () => {
